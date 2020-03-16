@@ -36,17 +36,27 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  Account("accounts")
-    .insert(req.body, "id")
-    .then(ids => {
-      res.status(201).json({ response: ids });
-    })
-    .catch(error => {
-      console.log(error);
-      res.status(500).json({
-        errroMessage: "Failed to save Account"
-      });
+  if (!req.body.name) {
+    res.status(400).json({
+      errroMessage: "Name is required"
     });
+  } else if (!req.body.budget) {
+    res.status(400).json({
+      errroMessage: "Budget is required"
+    });
+  } else {
+    Account("accounts")
+      .insert(req.body, "id")
+      .then(ids => {
+        res.status(201).json({ response: ids });
+      })
+      .catch(error => {
+        console.log(error);
+        res.status(500).json({
+          errroMessage: "Failed to save Account"
+        });
+      });
+  }
 });
 
 router.put("/:id", (req, res) => {
